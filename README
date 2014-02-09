@@ -1,0 +1,11 @@
+Author: Alec Snyder
+APIs and SDK's provided by google under the open source project. License of this project is coming soon
+e-mail: linuxbash8@gmail.com
+Google Drive Linux implementation in Java
+right now, this is just the example program provided by google, GUI and more features coming soon.
+questions? just e-mail me.
+intructions, download the google drive files
+compile the googledrive java file adding all the jars in the SDK to the classpath (either temporarily or permanently). 
+then, run and follow the instructions of the program. (remember to add the classpath when you run it as well).
+for more info, take a look at the the google developer website
+
