@@ -3,7 +3,7 @@
  * Google Drive for Linux
  * Code based off of Google Quickstart drive example for Java
  * https://developers.google.com/drive/web/quickstart/quickstart-java
- * This Code adds a document to the user's Drive
+ * This code Downloads a given document from the drive given the file ID number
  */
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -16,7 +16,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-
+import com.google.api.client.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,12 +24,12 @@ import java.util.Arrays;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import com.google.api.client.http.GenericUrl;
 
-
-public class DriveInsert {
+public class DriveDownload {
 
   private static String CLIENT_ID = "842617857460-1gm3qknepc16b9dei9brhgnkc12aqrds.apps.googleusercontent.com";
   private static String CLIENT_SECRET = "d7lWsLVBBOBQw4AkQxSE5sYH";
@@ -37,12 +37,31 @@ public class DriveInsert {
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
   public static void main(String[] args) throws IOException {
+    String id=args[0];
+    ArrayList<File> result;
+    File down=new File();
+    try
+    {
+        result=DriveList.list();
+        for(int i=0; i<result.size(); i++)
+        {
+            if(result.get(i).getId().equals(id))
+            {
+                down=result.get(i);
+            }
+        }
+    }
+    catch(IOException e)
+    {
+        System.out.println("Error in listing drive contents");
+    }
+    
+    /* Create Service */
     EasyReader reader=new EasyReader(".drive");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
-    //get Access Token
     String urlStr = "https://accounts.google.com/o/oauth2/token";
     String param="client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&refresh_token="+REFRESH_TOKEN+"&grant_type=refresh_token";
     URL url=new URL(urlStr);
@@ -60,6 +79,7 @@ public class DriveInsert {
     String res=in.readLine();
     res=in.readLine();
     String access=res.substring(20, res.length()-2);
+    System.out.println(res);
     
     GoogleCredential credential = new GoogleCredential();
     // Set authorized credentials.
@@ -67,18 +87,17 @@ public class DriveInsert {
     
     //Create a new authorized API client
     Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
-
-    //Insert a file  
-    File body = new File();
-    body.setTitle(args[0]);
-    body.setDescription("drive-linux upload");
-    String mime=Files.probeContentType(FileSystems.getDefault().getPath(args[0]));
-    body.setMimeType(mime);
-    
-    java.io.File fileContent = new java.io.File(args[0]);
-    FileContent mediaContent = new FileContent(mime, fileContent);
-
-    File file = service.files().insert(body, mediaContent).execute();
-    System.out.println("File ID: " + file.getId());
+    HttpResponse response = service.getRequestFactory().buildGetRequest(new GenericUrl(down.getDownloadUrl())).execute();
+    InputStream downStream=response.getContent();
+    //write content of downloaded file to file on local storage
+    int thisByte=downStream.read();
+    FileOutputStream out=new FileOutputStream(down.getTitle());
+    while(thisByte != -1)
+    {
+        out.write(thisByte);
+        thisByte=downStream.read();
+    }
+    out.close();
+    downStream.close();
   }
 }

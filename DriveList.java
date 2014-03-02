@@ -37,12 +37,13 @@ public class DriveList {
   private static String REFRESH_TOKEN;
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
-  public static void main(String[] args) throws IOException {
+  public static ArrayList<File> list() throws IOException {
     EasyReader reader=new EasyReader(".drive");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
+    //get Access Token
     String urlStr = "https://accounts.google.com/o/oauth2/token";
     String param="client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&refresh_token="+REFRESH_TOKEN+"&grant_type=refresh_token";
     URL url=new URL(urlStr);
@@ -60,7 +61,6 @@ public class DriveList {
     String res=in.readLine();
     res=in.readLine();
     String access=res.substring(20, res.length()-2);
-    System.out.println(res);
     
     GoogleCredential credential = new GoogleCredential();
     // Set authorized credentials.
@@ -69,7 +69,7 @@ public class DriveList {
     //Create a new authorized API client
     Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
 
-    //List Files
+    //put files in ArrayList
     ArrayList<File> result=new ArrayList<File>();
     Drive.Files.List request =service.files().list();
     do
@@ -79,9 +79,21 @@ public class DriveList {
         request.setPageToken(files.getNextPageToken());
     } while(request.getPageToken() != null && request.getPageToken().length()>0);
     
-    for(int i=0; i<result.size(); i++)
-    {
-        System.out.println(result.get(i).getTitle()+", ID = ["+result.get(i).getId()+"]");
-    }
+    return result; //return ArrayList
+  }
+  public static void main(String[] args)
+  {
+      //Access Array List and print out
+      try {
+      ArrayList<File> result=DriveList.list(); 
+      for(int i=0; i<result.size(); i++)
+      {
+          System.out.println(result.get(i).getTitle()+", ID=["+result.get(i).getId()+"]");
+      }
+      }
+      catch (IOException e)
+      {
+          System.out.println("Error getting list!");
+      }
   }
 }

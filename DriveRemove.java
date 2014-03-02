@@ -39,6 +39,7 @@ public class DriveRemove {
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
+    //get Access Token
     String urlStr = "https://accounts.google.com/o/oauth2/token";
     String param="client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&refresh_token="+REFRESH_TOKEN+"&grant_type=refresh_token";
     URL url=new URL(urlStr);
@@ -56,8 +57,7 @@ public class DriveRemove {
     String res=in.readLine();
     res=in.readLine();
     String access=res.substring(20, res.length()-2);
-    System.out.println(res);
-    
+
     GoogleCredential credential = new GoogleCredential();
     // Set authorized credentials.
     credential.setAccessToken(access);
