@@ -2,7 +2,7 @@
  * cs162
  * Google Drive for linux
  * grabs a refresh token and saves it to .drive metafile
- * Based on Google drive Quickstart code: https://developers.google.com/drive/web/quickstart/quickstart-java
+ * code MODIFIED FROM Google drive Quickstart code: https://developers.google.com/drive/web/quickstart/quickstart-java
  */
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -48,7 +48,7 @@ public class DriveRefreshGen {
     GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(new JacksonFactory()).setTransport(new NetHttpTransport()).setClientSecrets(CLIENT_ID, CLIENT_SECRET).build();
     credential.setFromTokenResponse(response);
     //save refresh token for later
-    EasyWriter writer=new EasyWriter(".drive");
+    EasyWriter writer=new EasyWriter(System.getProperty("user.home")+"/gdrive/.drive_key");
     writer.println(credential.getRefreshToken());
     writer.close();
   }

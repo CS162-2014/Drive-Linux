@@ -1,7 +1,7 @@
 /*Alec Snyder
  * cs162
  * Google Drive for Linux
- * Code based off of Google Quickstart drive example for Java
+ * Code MODIFIED FROM Google Quickstart drive example for Java
  * https://developers.google.com/drive/web/quickstart/quickstart-java
  * This code Downloads a given document from the drive given the file ID number
  */
@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import com.google.api.client.http.GenericUrl;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class DriveDownload {
 
@@ -57,7 +59,7 @@ public class DriveDownload {
     }
     
     /* Create Service */
-    EasyReader reader=new EasyReader(".drive");
+    EasyReader reader=new EasyReader(System.getProperty("user.home")+"/gdrive/.drive_key");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
@@ -79,7 +81,6 @@ public class DriveDownload {
     String res=in.readLine();
     res=in.readLine();
     String access=res.substring(20, res.length()-2);
-    System.out.println(res);
     
     GoogleCredential credential = new GoogleCredential();
     // Set authorized credentials.
@@ -90,14 +91,6 @@ public class DriveDownload {
     HttpResponse response = service.getRequestFactory().buildGetRequest(new GenericUrl(down.getDownloadUrl())).execute();
     InputStream downStream=response.getContent();
     //write content of downloaded file to file on local storage
-    int thisByte=downStream.read();
-    FileOutputStream out=new FileOutputStream(down.getTitle());
-    while(thisByte != -1)
-    {
-        out.write(thisByte);
-        thisByte=downStream.read();
-    }
-    out.close();
-    downStream.close();
+    Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+down.getTitle()));
   }
 }

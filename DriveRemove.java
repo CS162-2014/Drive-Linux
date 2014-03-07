@@ -1,7 +1,7 @@
 /*Alec Snyder
  * cs162
  * Google Drive for Linux
- * Code based off of Google Quickstart drive example for Java
+ * Code MODIFIED FROM Google Quickstart drive example for Java
  * https://developers.google.com/drive/web/quickstart/quickstart-java
  * This Code adds a document to the user's Drive
  */
@@ -34,7 +34,7 @@ public class DriveRemove {
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
   public static void main(String[] args) throws IOException {
-    EasyReader reader=new EasyReader(".drive");
+    EasyReader reader=new EasyReader(System.getProperty("user.home")+"/.drive_key");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();

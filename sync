@@ -1,0 +1,4 @@
+#!/bin/bash
+#Alec Snyder
+#sync command to sync gdrive
+ls -1 ~/gdrive | java -classpath ".:./*:drive/*:drive/libs/*" Sync

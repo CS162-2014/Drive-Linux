@@ -1,7 +1,7 @@
 /*Alec Snyder
  * cs162
  * Google Drive for Linux
- * Code based off of Google Quickstart drive example for Java
+ * Code MODFIED FROM Google Quickstart drive example for Java
  * https://developers.google.com/drive/web/quickstart/quickstart-java
  * This Code adds a document to the user's Drive
  */
@@ -36,8 +36,8 @@ public class DriveInsert {
   private static String REFRESH_TOKEN;
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
-  public static void main(String[] args) throws IOException {
-    EasyReader reader=new EasyReader(".drive");
+  public static String up(String fname) throws IOException {
+    EasyReader reader=new EasyReader(System.getProperty("user.home")+"/gdrive/.drive_key");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
@@ -70,15 +70,15 @@ public class DriveInsert {
 
     //Insert a file  
     File body = new File();
-    body.setTitle(args[0]);
+    body.setTitle(fname);
     body.setDescription("drive-linux upload");
-    String mime=Files.probeContentType(FileSystems.getDefault().getPath(args[0]));
+    String mime=Files.probeContentType(FileSystems.getDefault().getPath(fname));
     body.setMimeType(mime);
     
-    java.io.File fileContent = new java.io.File(args[0]);
+    java.io.File fileContent = new java.io.File(fname);
     FileContent mediaContent = new FileContent(mime, fileContent);
 
     File file = service.files().insert(body, mediaContent).execute();
-    System.out.println("File ID: " + file.getId());
+    return file.getId();
   }
 }
