@@ -1,3 +1,8 @@
+/* Alec Snyder
+ * cs162
+ * Class that syncs all in the ~/gdrive folder with drive
+ * revision system so that if you change a file, it gets updated
+ * metadata in XML format stored under ~/gdrive/gdrive.xml */
 import java.util.ArrayList;
 import java.io.IOException;
 public class Sync

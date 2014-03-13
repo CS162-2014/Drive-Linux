@@ -1,3 +1,7 @@
+/* Alec Snyder
+ * cs162
+ * A small helper class to display if the user inputs the wrong code for the oauth2 two step verification
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

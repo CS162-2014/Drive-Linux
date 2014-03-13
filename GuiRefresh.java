@@ -1,3 +1,7 @@
+/* Alec Snyder
+ * cs162
+ * Gui Program to get a new refresh token
+ */
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
