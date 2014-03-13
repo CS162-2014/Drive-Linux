@@ -70,7 +70,7 @@ public class DriveInsert {
 
     //Insert a file  
     File body = new File();
-    body.setTitle(fname);
+    body.setTitle(getFileName(fname));
     body.setDescription("drive-linux upload");
     String mime=Files.probeContentType(FileSystems.getDefault().getPath(fname));
     body.setMimeType(mime);
@@ -80,5 +80,17 @@ public class DriveInsert {
 
     File file = service.files().insert(body, mediaContent).execute();
     return file.getId();
+  }
+  
+  public static String getFileName(String f)
+  {
+      for(int i=f.length()-1; i>=0; i--)
+      {
+          if(f.charAt(i)=='/'&&f.charAt(i-1)!='\\')
+          {
+              return f.substring(i+1);
+          }
+      }
+      return f;
   }
 }

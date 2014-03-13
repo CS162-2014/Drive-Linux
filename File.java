@@ -19,16 +19,16 @@ public class File
         fid="";
     }
     
-    public static boolean isIn(ArrayList<File> ls, String f)
+    public static File isIn(ArrayList<File> ls, String f)
     {
         for(int i=0; i<ls.size(); i++)
         {
             if(ls.get(i).name.equals(f))
             {
-                return true;
+                return ls.get(i);
             }
         }
-        return false;
+        return null;
     }
     
     public static String getMdSum(String f) throws IOException

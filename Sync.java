@@ -36,15 +36,21 @@ public class Sync
         String home=System.getProperty("user.home")+"/gdrive/";
         EasyReader console=new EasyReader();
         String line=console.readLine();
+        ArrayList<String> ls=new ArrayList<String>();
         while(!console.eof())
         {
-            if(!File.isIn(files, home+line))
+            ls.add(line);
+            line=console.readLine();
+        }
+        for(int i=0; i<ls.size(); i++)
+        {
+            if(File.isIn(files, home+ls.get(i))==null)
             {
                 try
                 {
-                    String id=DriveInsert.up(home+line);
+                    String id=DriveInsert.up(home+ls.get(i));
                     File newFile=new File();
-                    newFile.name=home+line;
+                    newFile.name=home+ls.get(i);
                     newFile.fid=id;
                     try
                     {
@@ -52,17 +58,49 @@ public class Sync
                     }
                     catch(IOException e)
                     {
-                        System.out.println("error creating md5sum");
+                        System.out.println("error creating md5sum for "+ls.get(i));
                         newFile.md5sum="temp";
                     }
                     files.add(newFile);
                 }
                 catch(IOException e)
                 {
-                    System.out.println("Error, unable to upload");
+                    System.out.println("Error, unable to upload "+ls.get(i));
                 }
             }
-            line=console.readLine();
+            else
+            {
+                try
+                {
+                    File match=File.isIn(files, home+ls.get(i));
+                    String sum=File.getMdSum(home+ls.get(i));
+                    if(!sum.equals(match.md5sum))
+                    {
+                        DriveRemove.remove(match.fid);
+                        match.fid=DriveInsert.up(home+ls.get(i));
+                        match.md5sum=sum;
+                    }
+                }
+                catch(IOException e)
+                {
+                    System.out.println("Unable to resolve md5 update for "+home+ls.get(i));
+                }
+            }
+        }
+        for(int i=0; i<files.size(); i++)
+        {
+            if(!ls.contains(DriveInsert.getFileName(files.get(i).name)))
+            {
+                try
+                {
+                    DriveRemove.remove(files.get(i).fid);
+                    files.remove(i);
+                }
+                catch(IOException e)
+                {
+                    System.out.println("Error deleting file: "+files.get(i).name);
+                }
+            }
         }
         EasyWriter writer=new EasyWriter(home+".drive.xml");
         writer.print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");

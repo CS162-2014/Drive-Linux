@@ -33,8 +33,8 @@ public class DriveRemove {
   private static String REFRESH_TOKEN;
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
-  public static void main(String[] args) throws IOException {
-    EasyReader reader=new EasyReader(System.getProperty("user.home")+"/.drive_key");
+  public static void remove(String fid) throws IOException {
+    EasyReader reader=new EasyReader(System.getProperty("user.home")+"/gdrive/.drive_key");
     REFRESH_TOKEN = reader.readLine();
     reader.close();
     HttpTransport httpTransport = new NetHttpTransport();
@@ -66,7 +66,7 @@ public class DriveRemove {
     Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
 
     //remove File by ID
-    String fileRem=args[0];
+    String fileRem=fid;
     service.files().delete(fileRem).execute();
     //System.out.println("File ID: " + file.getId());
   }
