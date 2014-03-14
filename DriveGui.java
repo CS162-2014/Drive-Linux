@@ -64,19 +64,8 @@ public class DriveGui implements ActionListener
         }
         else if(e.getSource()==(Object)(sync))
         {
-            try
-            {
-                Process p=Runtime.getRuntime().exec("./gdrive");
-                p.waitFor();
-            }
-            catch(IOException ex)
-            {
-                System.out.println("Sync command not called");
-            }
-            catch(InterruptedException ex)
-            {
-                System.out.println("Warning! Sync not finished!");
-            }
+            String[] args={};
+            Sync.main(args);
         }
     }
     

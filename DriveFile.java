@@ -6,20 +6,20 @@ import java.lang.Process;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class File
+public class DriveFile
 {
     String name;
     String md5sum;
     String fid;
     
-    public File()
+    public DriveFile()
     {
         name="";
         md5sum="";
         fid="";
     }
     
-    public static File isIn(ArrayList<File> ls, String f)
+    public static DriveFile isIn(ArrayList<DriveFile> ls, String f)
     {
         for(int i=0; i<ls.size(); i++)
         {

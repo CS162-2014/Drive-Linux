@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import com.google.api.client.http.GenericUrl;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class DriveDownload {
 
@@ -91,6 +92,6 @@ public class DriveDownload {
     HttpResponse response = service.getRequestFactory().buildGetRequest(new GenericUrl(down.getDownloadUrl())).execute();
     InputStream downStream=response.getContent();
     //write content of downloaded file to file on local storage
-    Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+down.getTitle()));
+    Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+down.getTitle()), StandardCopyOption.REPLACE_EXISTING);
   }
 }

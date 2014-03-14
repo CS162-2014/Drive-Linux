@@ -5,11 +5,12 @@
  * metadata in XML format stored under ~/gdrive/gdrive.xml */
 import java.util.ArrayList;
 import java.io.IOException;
+import java.io.File;
 public class Sync
 {
-    public static ArrayList<File> populateFiles()
+    public static ArrayList<DriveFile> populateFiles()
     {
-        ArrayList<File> files=new ArrayList<File>();
+        ArrayList<DriveFile> files=new ArrayList<DriveFile>();
         String home=System.getProperty("user.home")+"/gdrive/";
         EasyReader reader=new EasyReader(home+".drive.xml");
         String line=reader.readLine();
@@ -23,7 +24,7 @@ public class Sync
             String id=line.substring(6,line.length()-5);
             line=reader.readLine();
             String mdsum=line.substring(9,line.length()-8);
-            File f=new File();
+            DriveFile f=new DriveFile();
             f.name=name;
             f.fid=id;
             f.md5sum=mdsum;
@@ -37,29 +38,29 @@ public class Sync
     
     public static void main(String[] args)
     {
-        ArrayList<File> files=Sync.populateFiles();
+        ArrayList<DriveFile> files=Sync.populateFiles();
         String home=System.getProperty("user.home")+"/gdrive/";
-        EasyReader console=new EasyReader();
-        String line=console.readLine();
         ArrayList<String> ls=new ArrayList<String>();
-        while(!console.eof())
+        File driveDir=new File(System.getProperty("user.home")+"/gdrive");
+        File[] fs=driveDir.listFiles();
+        for(int i=0; i<fs.length; i++)
         {
-            ls.add(line);
-            line=console.readLine();
+            if(!fs[i].isHidden())
+                ls.add(fs[i].getAbsolutePath());
         }
         for(int i=0; i<ls.size(); i++)
         {
-            if(File.isIn(files, home+ls.get(i))==null)
+            if(DriveFile.isIn(files, ls.get(i))==null)
             {
                 try
                 {
-                    String id=DriveInsert.up(home+ls.get(i));
-                    File newFile=new File();
-                    newFile.name=home+ls.get(i);
+                    String id=DriveInsert.up(ls.get(i));
+                    DriveFile newFile=new DriveFile();
+                    newFile.name=ls.get(i);
                     newFile.fid=id;
                     try
                     {
-                        newFile.md5sum=File.getMdSum(newFile.name);
+                        newFile.md5sum=DriveFile.getMdSum(newFile.name);
                     }
                     catch(IOException e)
                     {
@@ -77,24 +78,24 @@ public class Sync
             {
                 try
                 {
-                    File match=File.isIn(files, home+ls.get(i));
-                    String sum=File.getMdSum(home+ls.get(i));
+                    DriveFile match=DriveFile.isIn(files,ls.get(i));
+                    String sum=DriveFile.getMdSum(ls.get(i));
                     if(!sum.equals(match.md5sum))
                     {
                         DriveRemove.remove(match.fid);
-                        match.fid=DriveInsert.up(home+ls.get(i));
+                        match.fid=DriveInsert.up(ls.get(i));
                         match.md5sum=sum;
                     }
                 }
                 catch(IOException e)
                 {
-                    System.out.println("Unable to resolve md5 update for "+home+ls.get(i));
+                    System.out.println("Unable to resolve md5 update for "+ls.get(i));
                 }
             }
         }
         for(int i=0; i<files.size(); i++)
         {
-            if(!ls.contains(DriveInsert.getFileName(files.get(i).name)))
+            if(!ls.contains(files.get(i).name))
             {
                 try
                 {
