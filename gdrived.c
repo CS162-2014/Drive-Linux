@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     
     while(1)
     {
-        int ret=system("./gdrive");
-        sleep(10);
+        int ret=system("gdrive --sync");
+        sleep(5);
     }
     
     exit(EXIT_SUCCESS);

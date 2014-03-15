@@ -2,10 +2,23 @@ Author: Alec Snyder
 APIs and SDK's provided by google under the open source project. License of this project is coming soon
 e-mail: linuxbash8@gmail.com
 Google Drive Linux implementation in Java
-right now, this is just the example program provided by google, GUI and more features coming soon.
 questions? just e-mail me.
-intructions, download the google drive files
-compile the googledrive java file adding all the jars in the SDK to the classpath (either temporarily or permanently). 
-then, run and follow the instructions of the program. (remember to add the classpath when you run it as well).
-for more info, take a look at the the google developer website
+intructions, download the zip from the git website, then, unzip the zipped archive. Then, run ./install.sh to install everything you will need
+sudo rights
+
+run gdrive --gui to access the gui interface
+
+run gdrived to start the daemon
+
+run gdrive --sync to sync one time (not necessary if daemon is started)
+
+run gdrive --list to list all the files in your drive
+
+run gdrive --insert to add a local file to your drive
+
+run gdrive --download to download a file from drive to your ~/gdrive directory (get the file id from gdrive --list)
+
+run gdrive --remove to remove a drive from Drive (get the file id from gdrive --list)
+
+run gdrive --pull to download all files from Drive to your ~/gdrive directory overwrites any local files with the same name
 

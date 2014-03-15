@@ -4,25 +4,25 @@
 #command line interace for gdrive
 if [[ $1 == "--sync" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" Sync
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" Sync
 elif [[ $1 == "--gui" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DriveGui
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DriveGui
 elif [[ $1 == "--list" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DriveList
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DriveList
 elif [[ $1 == "--insert" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DriveInsert $2
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DriveInsert $2
 elif [[ $1 == "--remove" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DriveRemove $2
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DriveRemove $2
 elif [[ $1 == "--download" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DriveDownload $2
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DriveDownload $2
 elif [[ $1 == "--pull" ]]
 then
-    java -cp ".:./*:drive/*:drive/libs/*" DrivePull
+    java -cp ".:./*:/lib/gdrive:/lib/gdrive/*:/lib/gdrive/drive/*:/lib/gdrive/drive/libs/*" DrivePull
 else
     echo "gdrive: Usage: gdrive [--sync | --gui | --pull | --insert [FILE] | --remove [FILEID] | --download [FILEID]]"
 fi
