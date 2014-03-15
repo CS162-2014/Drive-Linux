@@ -30,12 +30,6 @@ int main(int argc, char *argv[])
     {
         exit(EXIT_FAILURE);
     }
-    
-    if((chdir("/home/alecsnyder/Documents/git/cs162/drive-linux"))<0)
-    {
-        exit(EXIT_FAILURE);
-    }
-    
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
