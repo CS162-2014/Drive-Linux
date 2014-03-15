@@ -39,6 +39,91 @@ public class DriveDownload {
   private static String REFRESH_TOKEN;
   private static String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
   
+  public static void downloadFiles(ArrayList<File> files) throws IOException
+  {
+        EasyReader reader=new EasyReader(System.getProperty("user.home")+"/gdrive/.drive_key");
+        REFRESH_TOKEN = reader.readLine();
+        reader.close();
+        HttpTransport httpTransport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
+        String urlStr = "https://accounts.google.com/o/oauth2/token";
+        String param="client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&refresh_token="+REFRESH_TOKEN+"&grant_type=refresh_token";
+        URL url=new URL(urlStr);
+        HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+        con.setDoOutput(true);
+        String code="";
+        DataOutputStream stream=new DataOutputStream(con.getOutputStream());
+        stream.writeBytes(param);
+        stream.flush();
+        stream.close();
+        BufferedReader in =new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String input="";
+        String res=in.readLine();
+        res=in.readLine();
+        String access=res.substring(20, res.length()-2);
+        GoogleCredential credential = new GoogleCredential();
+        credential.setAccessToken(access);
+        Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
+        String home=System.getProperty("user.home")+"/gdrive/";
+        ArrayList<DriveFile> fs=Sync.populateFiles();
+        for(int i=0; i<files.size(); i++)
+        {
+            DriveFile match=DriveFile.isIn(fs, home+files.get(i).getTitle());
+            if(match!=null)
+            {
+                HttpResponse response = service.getRequestFactory().buildGetRequest(new GenericUrl(files.get(i).getDownloadUrl())).execute();
+                InputStream downStream=response.getContent();
+                //write content of downloaded file to file on local storage
+                Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+files.get(i).getTitle()), StandardCopyOption.REPLACE_EXISTING);
+                match.fid=files.get(i).getId();
+                try
+                {
+                    match.md5sum=DriveFile.getMdSum(match.name);
+                }
+                catch(IOException e)
+                {
+                    System.out.println("error getting md5sum");
+                }
+            }
+            else
+            {
+                if(files.get(i).getDownloadUrl()==null)
+                    continue;
+                HttpResponse response = service.getRequestFactory().buildGetRequest(new GenericUrl(files.get(i).getDownloadUrl())).execute();
+                InputStream downStream=response.getContent();
+                //write content of downloaded file to file on local storage
+                Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+files.get(i).getTitle()), StandardCopyOption.REPLACE_EXISTING);
+                DriveFile newFile=new DriveFile();
+                newFile.name=home+files.get(i).getTitle();
+                newFile.fid=files.get(i).getId();
+                try
+                {
+                    newFile.md5sum=DriveFile.getMdSum(home+files.get(i).getTitle());
+                }
+                catch(IOException e)
+                {
+                    System.out.println("error getting md5sum");
+                }
+                fs.add(newFile);
+            }
+        }
+        EasyWriter writer=new EasyWriter(home+".drive.xml");
+        writer.print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+        writer.print("<files>\n");
+        for(int i=0; i<fs.size(); i++)
+        {
+            writer.print("\t<file>\n");
+            writer.print("\t\t<name>"+fs.get(i).name+"</name>\n");
+            writer.print("\t\t<id>"+fs.get(i).fid+"</id>\n");
+            writer.print("\t\t<mdsum>"+fs.get(i).md5sum+"</mdsum>\n");
+            writer.print("\t</file>\n");
+        }
+        writer.print("</files>");
+        writer.close();
+    }
+  
   public static void main(String[] args) throws IOException {
     String id=args[0];
     ArrayList<File> result;

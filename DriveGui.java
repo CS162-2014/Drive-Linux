@@ -28,8 +28,8 @@ public class DriveGui implements ActionListener
         JPanel bPanel=new JPanel();
         bPanel.setLayout(new GridLayout(1,4));
         sync.addActionListener(this);
-        list.addActionListener(this);
         upload.addActionListener(this);
+        list.addActionListener(this);
         quit.addActionListener(this);
         bPanel.add(sync);
         bPanel.add(list);
@@ -66,6 +66,17 @@ public class DriveGui implements ActionListener
         {
             String[] args={};
             Sync.main(args);
+        }
+        else if(e.getSource()==(Object)(list))
+        {
+            try
+            {
+                DriveDownload.downloadFiles(DriveList.list());
+            }
+            catch(IOException ex)
+            {
+                System.out.println("Error downloading files");
+            }
         }
     }
     
