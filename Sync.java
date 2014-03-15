@@ -82,7 +82,7 @@ public class Sync
                     String sum=DriveFile.getMdSum(ls.get(i));
                     if(!sum.equals(match.md5sum))
                     {
-                        DriveRemove.remove(match.fid);
+                        DriveRemove.removeFid(match.fid);
                         match.fid=DriveInsert.up(ls.get(i));
                         match.md5sum=sum;
                     }
@@ -99,7 +99,7 @@ public class Sync
             {
                 try
                 {
-                    DriveRemove.remove(files.get(i).fid);
+                    DriveRemove.removeFid(files.get(i).fid);
                     files.remove(i);
                 }
                 catch(IOException e)

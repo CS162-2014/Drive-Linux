@@ -14,7 +14,7 @@ import java.lang.Process;
 public class DriveGui implements ActionListener
 {
     public JFrame frame;
-    private JButton sync, list, upload, quit;
+    private JButton sync, list, upload, quit, rem;
     
     public DriveGui()
     {
@@ -22,18 +22,21 @@ public class DriveGui implements ActionListener
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(2,1));
         sync=new JButton("Sync");
-        list=new JButton("List Files in Drive");
+        list=new JButton("Download Files from Drive");
         upload=new JButton("Upload File");
         quit=new JButton("Quit");
+        rem=new JButton("Remove Files from Drive");
         JPanel bPanel=new JPanel();
-        bPanel.setLayout(new GridLayout(1,4));
+        bPanel.setLayout(new GridLayout(1,5));
         sync.addActionListener(this);
         upload.addActionListener(this);
         list.addActionListener(this);
+        rem.addActionListener(this);
         quit.addActionListener(this);
         bPanel.add(sync);
         bPanel.add(list);
         bPanel.add(upload);
+        bPanel.add(rem);
         bPanel.add(quit);
         JLabel instr=new JLabel("What would you like to do?");
         frame.add(instr);
@@ -69,14 +72,11 @@ public class DriveGui implements ActionListener
         }
         else if(e.getSource()==(Object)(list))
         {
-            try
-            {
-                DriveDownload.downloadFiles(DriveList.list());
-            }
-            catch(IOException ex)
-            {
-                System.out.println("Error downloading files");
-            }
+            new DownloadFrame();
+        }
+        else if(e.getSource()==(Object)(rem))
+        {
+            new RemoveFrame();
         }
     }
     
