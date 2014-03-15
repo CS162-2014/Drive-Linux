@@ -110,4 +110,15 @@ public class DriveRemove {
     service.files().delete(fid).execute();
     //System.out.println("File ID: " + file.getId());
   }
+  public static void main(String[] args)
+  {
+      try
+      {
+          removeFid(args[0]);
+      }
+      catch(IOException e)
+      {
+          System.out.println("Error removing File by id: "+args[0]);
+      }
+  }
 }

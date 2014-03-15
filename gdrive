@@ -1,4 +1,28 @@
 #!/bin/bash
 #Alec Snyder
-#sync command to sync gdrive
-java -classpath ".:./*:drive/*:drive/libs/*" Sync
+#cs162
+#command line interace for gdrive
+if [[ $1 == "--sync" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" Sync
+elif [[ $1 == "--gui" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DriveGui
+elif [[ $1 == "--list" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DriveList
+elif [[ $1 == "--insert" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DriveInsert $2
+elif [[ $1 == "--remove" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DriveRemove $2
+elif [[ $1 == "--download" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DriveDownload $2
+elif [[ $1 == "--pull" ]]
+then
+    java -cp ".:./*:drive/*:drive/libs/*" DrivePull
+else
+    echo "gdrive: Usage: gdrive [--sync | --gui | --pull | --insert [FILE] | --remove [FILEID] | --download [FILEID]]"
+fi

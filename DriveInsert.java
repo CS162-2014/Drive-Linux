@@ -93,4 +93,15 @@ public class DriveInsert {
       }
       return f;
   }
+  public static void main(String[] args)
+  {
+      java.io.File ins=new java.io.File(args[0]);
+      try{
+        up(ins.getAbsolutePath());
+    }
+    catch(IOException e)
+    {
+        System.out.println("Error uploading file: "+args[0]);
+    }
+  }
 }

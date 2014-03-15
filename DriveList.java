@@ -83,10 +83,10 @@ public class DriveList {
   }
   public static void main(String[] args)
   {
-      System.out.println("______________________");
       //Access Array List and print out
       try {
       ArrayList<File> result=DriveList.list(); 
+      System.out.println("______________________");
       for(int i=0; i<result.size(); i++)
       {
           System.out.println(result.get(i).getTitle()+", ID=["+result.get(i).getId()+"]");

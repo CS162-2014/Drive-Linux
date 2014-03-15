@@ -124,7 +124,7 @@ public class DriveDownload {
         writer.close();
     }
   
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     String id=args[0];
     ArrayList<File> result;
     File down=new File();
@@ -143,7 +143,7 @@ public class DriveDownload {
     {
         System.out.println("Error in listing drive contents");
     }
-    
+    try {
     /* Create Service */
     EasyReader reader=new EasyReader(System.getProperty("user.home")+"/gdrive/.drive_key");
     REFRESH_TOKEN = reader.readLine();
@@ -178,5 +178,11 @@ public class DriveDownload {
     InputStream downStream=response.getContent();
     //write content of downloaded file to file on local storage
     Files.copy(downStream, Paths.get(System.getProperty("user.home")+"/gdrive/"+down.getTitle()), StandardCopyOption.REPLACE_EXISTING);
+    }
+    catch(IOException e)
+    {
+        System.out.println("error Downloading file by ID: "+args[0]);
+    }
+
   }
 }
