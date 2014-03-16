@@ -8,3 +8,5 @@ then
 fi
 sudo rm /bin/gdrive
 sudo rm /bin/gdrived
+sudo rm /usr/share/applications/google-drive.desktop
+

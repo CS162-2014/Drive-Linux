@@ -21,6 +21,7 @@ sudo cp gdrive /bin/gdrive
 sudo cp gdrive-libs.zip /lib/gdrive
 sudo cp EasyReader.class /lib/gdrive
 sudo cp EasyWriter.class /lib/gdrive
+sudo cp google-drive.desktop /usr/share/applications
 cp driveXml.xml ~/gdrive/.drive.xml
 cd /lib/gdrive
 sudo gcc gdrived.c -o gdrived
