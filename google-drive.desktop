@@ -3,4 +3,4 @@ Name=Google Drive
 Exec=gdrive --gui
 Type=Application
 Terminal=false
-Icon=~/Pictures/drive.jpg
+Icon=lib/gdrive/drive.jpg
